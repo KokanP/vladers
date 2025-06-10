@@ -4,10 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slovenske vlade: časovnica (1990-danes)</title>
+    
+    <!-- Meta oznake za predogled slike na socialnih omrežjih -->
+    <!-- POMEMBNO: Spodnje vrednosti boste morali prilagoditi, ko boste stran naložili na GitHub Pages. -->
+    <meta property="og:title" content="Časovnica slovenskih vlad (1990-danes)">
+    <meta property="og:description" content="Kdo je bil dlje na oblasti v Sloveniji? Interaktivna časovnica levih in desnih vlad.">
+    <meta property="og:image" content="https://VASE-IME.github.io/VAS-REPO/share-image.png">
+    <meta property="og:url" content="https://VASE-IME.github.io/VAS-REPO/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://VASE-IME.github.io/VAS-REPO/share-image.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -20,13 +31,13 @@
         .tooltip .tooltip-text {
             visibility: hidden;
             width: 220px;
-            background-color: #1f2937; /* gray-800 */
+            background-color: #1f2937;
             color: #fff;
             text-align: center;
             border-radius: 6px;
             padding: 8px;
             position: absolute;
-            z-index: 1;
+            z-index: 10;
             bottom: 125%;
             left: 50%;
             margin-left: -110px;
@@ -46,7 +57,6 @@
         .timeline-bar:hover {
             filter: brightness(1.1);
         }
-        /* Style for the ongoing mandate */
         .ongoing::after {
             content: '';
             position: absolute;
@@ -54,10 +64,18 @@
             right: 0;
             bottom: 0;
             width: 15px;
-            background: linear-gradient(to left, rgba(249, 250, 251, 0), rgba(249, 250, 251, 1)); /* bg-gray-50 */
+            background: linear-gradient(to left, rgba(249, 250, 251, 0), rgba(249, 250, 251, 1));
         }
         body.dark .ongoing::after {
-             background: linear-gradient(to left, rgba(17, 24, 39, 0), rgba(17, 24, 39, 1)); /* dark:bg-gray-900 */
+             background: linear-gradient(to left, rgba(17, 24, 39, 0), rgba(17, 24, 39, 1));
+        }
+        /* Hidden template for image generation */
+        #shareable-image-template {
+            position: absolute;
+            left: -9999px; /* Keep it off-screen */
+            width: 1080px;
+            height: 1080px;
+            padding: 60px;
         }
     </style>
 </head>
@@ -79,27 +97,38 @@
         </section>
 
         <!-- Detailed Timeline Section -->
-        <section>
+        <section class="mb-10">
             <h2 class="text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white">Časovnica predsednikov vlad</h2>
             <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-                <div id="timeline-labels" class="flex text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
-                    <!-- Year labels will be injected here -->
-                </div>
-                <!-- Main timeline bar -->
-                <div id="timeline-container" class="relative w-full flex h-16 md:h-20 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-                    <!-- Timeline blocks will be injected here -->
-                </div>
-                <!-- Legend -->
+                <div id="timeline-labels" class="flex text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2"></div>
+                <div id="timeline-container" class="relative w-full flex h-16 md:h-20 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700"></div>
                 <div class="flex justify-center items-center mt-4 space-x-6 text-sm">
-                    <div class="flex items-center">
-                        <span class="w-4 h-4 rounded-sm bg-red-600 mr-2"></span>
-                        <span>Leva vlada (L)</span>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="w-4 h-4 rounded-sm bg-blue-600 mr-2"></span>
-                        <span>Desna vlada (D)</span>
-                    </div>
+                    <div class="flex items-center"><span class="w-4 h-4 rounded-sm bg-red-600 mr-2"></span><span>Leva vlada (L)</span></div>
+                    <div class="flex items-center"><span class="w-4 h-4 rounded-sm bg-blue-600 mr-2"></span><span>Desna vlada (D)</span></div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Share Section -->
+        <section>
+            <h2 class="text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white">Deli infografiko</h2>
+            <div class="flex justify-center items-center flex-wrap gap-2 sm:gap-4">
+                <button id="share-twitter" class="flex items-center bg-gray-800 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg hover:bg-gray-700 transition text-sm sm:text-base">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                    <span>Twitter / X</span>
+                </button>
+                <button id="share-facebook" class="flex items-center bg-blue-700 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg hover:bg-blue-600 transition text-sm sm:text-base">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path></svg>
+                    <span>Facebook</span>
+                </button>
+                 <button id="share-bluesky" class="flex items-center bg-sky-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg hover:bg-sky-400 transition text-sm sm:text-base">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 6.858C5.373 6.858 0 11.037 0 16.486c0 5.45 5.373 9.628 12 9.628s12-4.179 12-9.628c0-5.45-5.373-9.628-12-9.628Zm0 17.51c-5.523 0-10-3.57-10-7.882s4.477-7.882 10-7.882 10 3.57 10 7.882-4.477 7.882-10 7.882Z M12 0C9.849 0 8.25 1.264 8.25 3.014c0 1.75 1.599 3.014 3.75 3.014s3.75-1.264 3.75-3.014C15.75 1.264 14.151 0 12 0Z"/></svg>
+                    <span>Bluesky</span>
+                </button>
+                <button id="download-image" class="flex items-center bg-gray-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg hover:bg-gray-500 transition text-sm sm:text-base">
+                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <span>Prenesi kot sliko</span>
+                </button>
             </div>
         </section>
         
@@ -107,17 +136,23 @@
             <p id="footer-date-info"></p>
             <p>Zadnji mandat je v teku, njegova dolžina pa je izračunana na dan ogleda te strani.</p>
         </footer>
-
     </div>
+    
+    <!-- Hidden template for image generation -->
+    <div id="shareable-image-template" class="bg-gray-800 text-white flex flex-col">
+        <div id="share-header" class="flex-shrink-0"></div>
+        <div id="share-summary" class="flex-grow"></div>
+        <div id="share-footer" class="w-full flex-shrink-0"></div>
+    </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- DYNAMIC DATE SETUP ---
             const today = new Date();
-            const todayString = today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+            const todayString = today.toISOString().split('T')[0];
             const startOfTimeline = new Date('1990-05-16');
+            const siteUrl = 'vladers.iffy.top';
 
-            // --- DATA (Dates are in YYYY-MM-DD format) ---
             const governments = [
                 { name: 'Lojze Peterle', side: 'D', start: '1990-05-16', end: '1992-05-14' },
                 { name: 'Janez Drnovšek', side: 'L', start: '1992-05-14', end: '1993-01-25' },
@@ -133,136 +168,170 @@
                 { name: 'Miro Cerar ml.', side: 'L', start: '2014-09-18', end: '2018-09-13' },
                 { name: 'Marjan Šarec', side: 'L', start: '2018-09-13', end: '2020-03-13' },
                 { name: 'Janez Janša', side: 'D', start: '2020-03-13', end: '2022-06-01' },
-                { name: 'Robert Golob', side: 'L', start: '2022-06-01', end: todayString }, // End date is dynamically set
+                { name: 'Robert Golob', side: 'L', start: '2022-06-01', end: todayString },
             ];
 
-            // --- UTILITY FUNCTIONS ---
             const parseDate = (dateStr) => new Date(dateStr);
-            const dayDiff = (startDate, endDate) => (parseDate(endDate) - parseDate(startDate)) / (1000 * 60 * 60 * 24);
+            const dayDiff = (start, end) => (parseDate(end) - parseDate(start)) / (1000 * 60 * 60 * 24);
 
-            // --- CALCULATIONS ---
             let totalDaysLeft = 0;
             let totalDaysRight = 0;
-            
             const processedGovernments = governments.map(gov => {
                 const duration = dayDiff(gov.start, gov.end);
-                if (gov.side === 'L') {
-                    totalDaysLeft += duration;
-                } else {
-                    totalDaysRight += duration;
-                }
+                if (gov.side === 'L') totalDaysLeft += duration; else totalDaysRight += duration;
                 return { ...gov, duration };
             });
 
             const totalDays = totalDaysLeft + totalDaysRight;
+            const totalYears = (today - startOfTimeline) / (1000 * 60 * 60 * 24 * 365.25);
             const yearsLeft = (totalDaysLeft / 365.25).toFixed(1);
             const yearsRight = (totalDaysRight / 365.25).toFixed(1);
             const percentLeft = ((totalDaysLeft / totalDays) * 100).toFixed(1);
             const percentRight = ((totalDaysRight / totalDays) * 100).toFixed(1);
 
-            // --- DYNAMIC DOM MANIPULATION ---
-
-            // 1. Update Main Title
-            const totalYears = (today - startOfTimeline) / (1000 * 60 * 60 * 24 * 365.25);
-            document.getElementById('main-title').textContent = `${Math.floor(totalYears)} let slovenskih vlad`;
+            // --- RENDER MAIN PAGE ---
+            renderMainPage();
             
-            // 2. Update Footer
-            const formattedDate = today.toLocaleDateString('sl-SI', { day: 'numeric', month: 'long', year: 'numeric' });
-            document.getElementById('footer-date-info').textContent = `Infografika ustvarjena dne ${formattedDate}.`;
+            // --- POPULATE AND SETUP SHARING ---
+            populateShareTemplate();
+            setupShareButtons();
 
-            // 3. Render Summary Section
-            const summaryContainer = document.getElementById('summary-container');
-            summaryContainer.innerHTML = `
-                <div class="space-y-3">
-                    <div class="flex items-center">
-                        <div class="w-32 font-semibold text-gray-700 dark:text-gray-300">
-                            <div class="flex items-center">
-                                <span class="w-4 h-4 rounded-sm bg-red-600 mr-2"></span>
-                                <span>Leva vlada</span>
-                            </div>
-                        </div>
-                        <div class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-6">
-                            <div class="bg-red-600 h-6 rounded-full text-white text-xs flex items-center justify-center font-semibold" style="width: ${percentLeft}%;">${percentLeft}%</div>
-                        </div>
-                        <div class="w-24 text-right font-semibold text-gray-600 dark:text-gray-400">${yearsLeft} let</div>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="w-32 font-semibold text-gray-700 dark:text-gray-300">
-                             <div class="flex items-center">
-                                <span class="w-4 h-4 rounded-sm bg-blue-600 mr-2"></span>
-                                <span>Desna vlada</span>
-                            </div>
-                        </div>
-                        <div class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-6">
-                            <div class="bg-blue-600 h-6 rounded-full text-white text-xs flex items-center justify-center font-semibold" style="width: ${percentRight}%;">${percentRight}%</div>
-                        </div>
-                        <div class="w-24 text-right font-semibold text-gray-600 dark:text-gray-400">${yearsRight} let</div>
-                    </div>
-                </div>
-            `;
 
-            // 4. Render Timeline Section
-            const timelineContainer = document.getElementById('timeline-container');
-            timelineContainer.innerHTML = ''; // Clear previous content
-            processedGovernments.forEach((gov, index) => {
-                const isOngoing = index === processedGovernments.length - 1;
-                const bgColor = gov.side === 'L' ? 'bg-red-600' : 'bg-blue-600'; // Colors swapped
-                const durationYears = (gov.duration / 365.25).toFixed(1);
+            function renderMainPage() {
+                document.getElementById('main-title').textContent = `${Math.floor(totalYears)} let slovenskih vlad`;
+                const formattedDate = today.toLocaleDateString('sl-SI', { day: 'numeric', month: 'long', year: 'numeric' });
+                document.getElementById('footer-date-info').textContent = `Infografika ustvarjena dne ${formattedDate}.`;
 
-                const block = document.createElement('div');
-                block.className = `tooltip timeline-bar flex items-center justify-center text-white text-xs md:text-sm font-bold p-1 text-center leading-tight ${bgColor} ${isOngoing ? 'ongoing' : ''}`;
-                block.style.flex = `${gov.duration} 1 0%`; // Proportional width
+                document.getElementById('summary-container').innerHTML = `
+                    <div class="space-y-3">
+                        <div class="flex items-center"><div class="w-32 font-semibold text-gray-700 dark:text-gray-300"><div class="flex items-center"><span class="w-4 h-4 rounded-sm bg-red-600 mr-2"></span><span>Leva vlada</span></div></div><div class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-6"><div class="bg-red-600 h-6 rounded-full text-white text-xs flex items-center justify-center font-semibold" style="width: ${percentLeft}%;">${percentLeft}%</div></div><div class="w-24 text-right font-semibold text-gray-600 dark:text-gray-400">${yearsLeft} let</div></div>
+                        <div class="flex items-center"><div class="w-32 font-semibold text-gray-700 dark:text-gray-300"><div class="flex items-center"><span class="w-4 h-4 rounded-sm bg-blue-600 mr-2"></span><span>Desna vlada</span></div></div><div class="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-6"><div class="bg-blue-600 h-6 rounded-full text-white text-xs flex items-center justify-center font-semibold" style="width: ${percentRight}%;">${percentRight}%</div></div><div class="w-24 text-right font-semibold text-gray-600 dark:text-gray-400">${yearsRight} let</div></div>
+                    </div>`;
 
-                if (gov.duration > 150) { // Approx 5 months
-                    block.textContent = gov.name.split(' ')[1]; // Last name
-                } else if (gov.duration > 60) {
-                     block.textContent = gov.name.split(' ')[1][0] + '.'; // Initial
-                }
+                const timelineContainer = document.getElementById('timeline-container');
+                timelineContainer.innerHTML = '';
+                processedGovernments.forEach((gov, index) => {
+                    const isOngoing = index === processedGovernments.length - 1;
+                    const bgColor = gov.side === 'L' ? 'bg-red-600' : 'bg-blue-600';
+                    const durationYears = (gov.duration / 365.25).toFixed(1);
+                    const block = document.createElement('div');
+                    block.className = `tooltip timeline-bar flex items-center justify-center text-white text-xs md:text-sm font-bold p-1 text-center leading-tight ${bgColor} ${isOngoing ? 'ongoing' : ''}`;
+                    block.style.flex = `${gov.duration} 1 0%`;
+                    if (gov.duration > 150) block.textContent = gov.name.split(' ')[1]; else if (gov.duration > 60) block.textContent = gov.name.split(' ')[1][0] + '.';
+                    const tooltipText = document.createElement('span');
+                    tooltipText.className = 'tooltip-text';
+                    tooltipText.innerHTML = `<strong class="block">${gov.name} (${gov.side})</strong>${parseDate(gov.start).toLocaleDateString('sl-SI')} - ${isOngoing ? 'Danes' : parseDate(gov.end).toLocaleDateString('sl-SI')}<br>(Pribl. ${durationYears} let)`;
+                    block.appendChild(tooltipText);
+                    timelineContainer.appendChild(block);
+                });
 
-                const tooltipText = document.createElement('span');
-                tooltipText.className = 'tooltip-text';
-                tooltipText.innerHTML = `
-                    <strong class="block">${gov.name} (${gov.side})</strong>
-                    ${parseDate(gov.start).toLocaleDateString('sl-SI')} - ${isOngoing ? 'Danes' : parseDate(gov.end).toLocaleDateString('sl-SI')}
-                    <br>
-                    (Pribl. ${durationYears} let)
-                `;
-                
-                block.appendChild(tooltipText);
-                timelineContainer.appendChild(block);
-            });
-            
-            // 5. Render Timeline Labels
-            const timelineLabels = document.getElementById('timeline-labels');
-            timelineLabels.innerHTML = ''; // Clear previous labels
-            const startYear = startOfTimeline.getFullYear();
-            const currentYear = today.getFullYear();
-            const yearSpan = currentYear - startYear;
-            const numLabels = Math.min(Math.floor(yearSpan / 5), 6); // Add a label roughly every 5 years, max 6 labels
-            
-            let labels = [startYear];
-            for (let i = 1; i < numLabels; i++) {
-                labels.push(startYear + Math.round(i * yearSpan / numLabels));
+                const timelineLabels = document.getElementById('timeline-labels');
+                timelineLabels.innerHTML = '';
+                const startYear = startOfTimeline.getFullYear();
+                const currentYear = today.getFullYear();
+                let labels = [startYear, 1995, 2000, 2005, 2010, 2015, 2020, currentYear].filter(y => y <= currentYear);
+                labels = [...new Set(labels)];
+                let lastPos = 0;
+                labels.forEach(year => {
+                    const yearDate = new Date(year, 0, 1);
+                    const pos = dayDiff(startOfTimeline, yearDate) / totalDays * 100;
+                    const flexGrow = Math.max(0, pos - lastPos);
+                    const labelSpan = document.createElement('span');
+                    labelSpan.textContent = year;
+                    labelSpan.style.flex = `${flexGrow} 1 0%`;
+                    if (labels.indexOf(year) > 0) labelSpan.classList.add('text-center');
+                    if (labels.indexOf(year) === labels.length - 1) labelSpan.classList.add('text-right');
+                    timelineLabels.appendChild(labelSpan);
+                    lastPos = pos;
+                });
             }
-            labels.push(currentYear);
 
-            labels = [...new Set(labels)]; // Remove duplicates
-
-            let lastPos = 0;
-            labels.forEach(year => {
-                const yearDate = new Date(year, 0, 1);
-                const pos = dayDiff(startOfTimeline, yearDate) / totalDays * 100;
-                const flexGrow = pos - lastPos;
+            function populateShareTemplate() {
+                // Final refined layout for the shareable image
+                document.getElementById('share-header').innerHTML = `<div class="text-center pt-8"><h1 class="text-6xl font-bold">Časovnica slovenskih vlad</h1><p class="text-4xl text-gray-300 mt-2">1990 - ${today.getFullYear()}</p></div>`;
                 
-                const labelSpan = document.createElement('span');
-                labelSpan.textContent = year;
-                labelSpan.style.flex = `${flexGrow} 1 0%`;
-                if (labels.indexOf(year) > 0) labelSpan.classList.add('text-center');
-                if (labels.indexOf(year) === labels.length - 1) labelSpan.classList.add('text-right');
+                document.getElementById('share-summary').innerHTML = `
+                    <div class="flex justify-around items-center w-full h-full p-8">
+                        <!-- Leva Vlada Block -->
+                        <div class="w-2/5 h-full flex flex-col justify-start items-center text-center bg-gray-900 rounded-2xl pt-6 relative overflow-hidden">
+                            <div class="absolute bottom-0 left-0 w-full bg-red-600 bg-opacity-30" style="height: ${percentLeft}%;"></div>
+                            <div class="relative z-10 flex flex-col items-center h-full">
+                                <h2 class="text-4xl font-bold flex items-center mb-6">
+                                    <span class="w-6 h-6 rounded-md bg-red-600 mr-3"></span>
+                                    Leva vlada
+                                </h2>
+                                <div class="flex flex-col justify-center flex-grow">
+                                    <p class="text-8xl font-black text-white leading-none">${percentLeft}%</p>
+                                    <p class="text-4xl font-semibold text-gray-300 mt-4">${yearsLeft} let</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Desna Vlada Block -->
+                        <div class="w-2/5 h-full flex flex-col justify-start items-center text-center bg-gray-900 rounded-2xl pt-6 relative overflow-hidden">
+                            <div class="absolute bottom-0 left-0 w-full bg-blue-600 bg-opacity-30" style="height: ${percentRight}%;"></div>
+                             <div class="relative z-10 flex flex-col items-center h-full">
+                                <h2 class="text-4xl font-bold flex items-center mb-6">
+                                    <span class="w-6 h-6 rounded-md bg-blue-600 mr-3"></span>
+                                    Desna vlada
+                                </h2>
+                                <div class="flex flex-col justify-center flex-grow">
+                                    <p class="text-8xl font-black text-white leading-none">${percentRight}%</p>
+                                    <p class="text-4xl font-semibold text-gray-300 mt-4">${yearsRight} let</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
 
-                timelineLabels.appendChild(labelSpan);
-                lastPos = pos;
-            });
+                document.getElementById('share-footer').innerHTML = `<p class="text-right text-2xl font-semibold text-gray-400 pr-4 pb-4">Vir: https://${siteUrl}</p>`;
+            }
+
+
+            function setupShareButtons() {
+                const shareText = `Pregled slovenskih vlad od leta 1990 do danes. Kdo je bil dlje na oblasti? Poglej na ${siteUrl}`;
+                
+                document.getElementById('share-twitter').addEventListener('click', () => {
+                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
+                });
+
+                document.getElementById('share-facebook').addEventListener('click', () => {
+                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://' + siteUrl)}`, '_blank');
+                });
+
+                document.getElementById('share-bluesky').addEventListener('click', () => {
+                    window.open(`https://bsky.app/intent/compose?text=${encodeURIComponent(shareText)}`, '_blank');
+                });
+                
+                document.getElementById('download-image').addEventListener('click', () => {
+                    const element = document.getElementById('shareable-image-template');
+                    const button = document.getElementById('download-image');
+                    const originalButtonContent = button.innerHTML;
+                    button.innerHTML = `<span>Pripravljam...</span>`;
+                    button.disabled = true;
+
+                    html2canvas(element, { 
+                        scale: 1, 
+                        logging: false, 
+                        useCORS: true,
+                        backgroundColor: '#1f2937' // Match bg-gray-800
+                    }).then(canvas => {
+                        const imageURL = canvas.toDataURL('image/png');
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = imageURL;
+                        downloadLink.download = 'slovenske-vlade-pregled.png';
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        
+                        button.innerHTML = originalButtonContent;
+                        button.disabled = false;
+                    }).catch(err => {
+                        console.error('oops, something went wrong!', err);
+                        button.innerHTML = originalButtonContent;
+                        button.disabled = false;
+                    });
+                });
+            }
         });
     </script>
 
