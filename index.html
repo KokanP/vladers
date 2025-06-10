@@ -6,13 +6,12 @@
     <title>Slovenske vlade: časovnica (1990-danes)</title>
     
     <!-- Meta oznake za predogled slike na socialnih omrežjih -->
-    <!-- POMEMBNO: Spodnje vrednosti boste morali prilagoditi, ko boste stran naložili na GitHub Pages. -->
     <meta property="og:title" content="Časovnica slovenskih vlad (1990-danes)">
     <meta property="og:description" content="Kdo je bil dlje na oblasti v Sloveniji? Interaktivna časovnica levih in desnih vlad.">
-    <meta property="og:image" content="https://VASE-IME.github.io/VAS-REPO/share-image.png">
-    <meta property="og:url" content="https://VASE-IME.github.io/VAS-REPO/">
+    <meta property="og:image" content="https://vladers.iffy.top/share-image.png">
+    <meta property="og:url" content="https://vladers.iffy.top/">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://VASE-IME.github.io/VAS-REPO/share-image.png">
+    <meta name="twitter:image" content="https://vladers.iffy.top/share-image.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -152,12 +151,7 @@
             const todayString = today.toISOString().split('T')[0];
             const startOfTimeline = new Date('1990-05-16');
             
-            // POMEMBNO: Ta URL mora biti enak tistemu, ki ste ga nastavili v GitHub Pages
-            const pageUrl = 'https://kokanp.github.io/vladers/'; 
-            // Vzemite URL iz meta oznake, da bo vedno usklajen
-            const metaUrl = document.querySelector('meta[property="og:url"]');
-            const livePageUrl = metaUrl ? metaUrl.content.replace(/VASE-IME\.github\.io\/VAS-REPO/g, 'kokanp.github.io/vladers') : pageUrl;
-
+            const livePageUrl = 'https://vladers.iffy.top/';
 
             const governments = [
                 { name: 'Lojze Peterle', side: 'D', start: '1990-05-16', end: '1992-05-14' },
@@ -289,29 +283,25 @@
                         </div>
                     </div>`;
 
-                document.getElementById('share-footer').innerHTML = `<p class="text-right text-2xl font-semibold text-gray-400 pr-4 pb-4">Vir: ${livePageUrl}</p>`;
+                document.getElementById('share-footer').innerHTML = `<p class="text-right text-2xl font-semibold text-gray-400 pr-4 pb-4">Vir: ${livePageUrl.replace(/^https?:\/\//, '')}</p>`;
             }
 
 
             function setupShareButtons() {
-                // === POPRAVLJENA LOGIKA DELJENJA ===
                 const shareText = `Časovnica slovenskih vlad (1990-${today.getFullYear()}). Kdo je bil dlje na oblasti?`;
                 const pageUrlToShare = livePageUrl;
                 
                 document.getElementById('share-twitter').addEventListener('click', () => {
-                    // Twitter uporabi 'url' parameter za generiranje kartice s sliko (iz meta oznak)
                     const twitterUrl = `https://x.com/intent/post?url=${encodeURIComponent(pageUrlToShare)}&text=${encodeURIComponent(shareText)}`;
                     window.open(twitterUrl, '_blank');
                 });
 
                 document.getElementById('share-facebook').addEventListener('click', () => {
-                    // Facebook uporabi 'u' parameter in iz njega prebere meta oznake za sliko
                     const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrlToShare)}`;
                     window.open(facebookUrl, '_blank');
                 });
 
                 document.getElementById('share-bluesky').addEventListener('click', () => {
-                     // Bluesky vključi URL v besedilo in ga samodejno spremeni v kartico
                     const blueskyText = `${shareText}\n\n${pageUrlToShare}`;
                     const blueskyUrl = `https://bsky.app/intent/compose?text=${encodeURIComponent(blueskyText)}`;
                     window.open(blueskyUrl, '_blank');
