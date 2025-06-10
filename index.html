@@ -5,13 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slovenske vlade: časovnica (1990-danes)</title>
     
-    <!-- Meta oznake za predogled slike na socialnih omrežjih -->
     <meta property="og:title" content="Časovnica slovenskih vlad (1990-danes)">
     <meta property="og:description" content="Kdo je bil dlje na oblasti v Sloveniji? Interaktivna časovnica levih in desnih vlad.">
-    <meta property="og:image" content="https://vladers.iffy.top/share-image.png">
     <meta property="og:url" content="https://vladers.iffy.top/">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://vladers.iffy.top/share-image.png">
+    <meta property="og:image:secure_url" content="https://vladers.iffy.top/share-image.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1080">
+    <meta property="og:image:height" content="1080">
+    
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Časovnica slovenskih vlad (1990-danes)">
+    <meta name="twitter:description" content="Kdo je bil dlje na oblasti v Sloveniji? Interaktivna časovnica levih in desnih vlad.">
     <meta name="twitter:image" content="https://vladers.iffy.top/share-image.png">
+
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -81,21 +89,17 @@
 <body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200">
 
     <div class="container mx-auto p-4 md:p-8 max-w-7xl">
-        <!-- Header -->
         <header class="text-center mb-8">
             <h1 id="main-title" class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">... let slovenskih vlad</h1>
             <p class="text-lg text-gray-600 dark:text-gray-400 mt-2">Časovnica politične moči od maja 1990 do danes.</p>
         </header>
 
-        <!-- Main Summary Section -->
         <section class="mb-10">
             <h2 class="text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white">Skupni čas na oblasti</h2>
             <div id="summary-container" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <!-- Summary bars will be injected here -->
-            </div>
+                </div>
         </section>
 
-        <!-- Detailed Timeline Section -->
         <section class="mb-10">
             <h2 class="text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white">Časovnica predsednikov vlad</h2>
             <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
@@ -108,7 +112,6 @@
             </div>
         </section>
 
-        <!-- Share Section -->
         <section>
             <h2 class="text-2xl font-bold text-center mb-4 text-gray-900 dark:text-white">Deli infografiko</h2>
             <div class="flex justify-center items-center flex-wrap gap-2 sm:gap-4">
@@ -137,7 +140,6 @@
         </footer>
     </div>
     
-    <!-- Hidden template for image generation -->
     <div id="shareable-image-template" class="bg-gray-800 text-white flex flex-col">
         <div id="share-header" class="flex-shrink-0"></div>
         <div id="share-summary" class="flex-grow"></div>
@@ -252,7 +254,6 @@
                 
                 document.getElementById('share-summary').innerHTML = `
                     <div class="flex justify-around items-center w-full h-full p-8">
-                        <!-- Leva Vlada Block -->
                         <div class="w-2/5 h-full flex flex-col justify-start items-center text-center bg-gray-900 rounded-2xl pt-6 relative overflow-hidden">
                             <div class="absolute bottom-0 left-0 w-full bg-red-600 bg-opacity-30" style="height: ${percentLeft}%;"></div>
                             <div class="relative z-10 flex flex-col items-center h-full">
@@ -267,7 +268,6 @@
                             </div>
                         </div>
                         
-                        <!-- Desna Vlada Block -->
                         <div class="w-2/5 h-full flex flex-col justify-start items-center text-center bg-gray-900 rounded-2xl pt-6 relative overflow-hidden">
                             <div class="absolute bottom-0 left-0 w-full bg-blue-600 bg-opacity-30" style="height: ${percentRight}%;"></div>
                              <div class="relative z-10 flex flex-col items-center h-full">
