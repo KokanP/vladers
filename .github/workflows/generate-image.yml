@@ -25,9 +25,10 @@ jobs:
         with:
           node-version: '18'
       
-      # Namesti sistemske odvisnosti, ki jih potrebuje Puppeteer
+      # === POPRAVLJEN KORAK ===
+      # Namesti posodobljene sistemske odvisnosti, ki jih potrebuje Puppeteer
       - name: Install Puppeteer dependencies
-        run: sudo apt-get update && sudo apt-get install -yq libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm-dev libnss3-dev libxss1 libasound2
+        run: sudo apt-get update && sudo apt-get install -yq libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf-2.0-0 libgtk-3-0 libgbm1 libnss3 libxss1 libasound2t64
 
       - name: Install Puppeteer
         run: npm install puppeteer
