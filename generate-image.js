@@ -22,7 +22,6 @@ const path = require('path');
             el.style.top = '0px';
         }, element);
 
-        // === KLJUČNA SPREMEMBA ===
         // Nastavi viewport na pravilno velikost slike (1200x628)
         await page.setViewport({ width: 1200, height: 628 });
 

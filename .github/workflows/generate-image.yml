@@ -30,8 +30,17 @@ jobs:
       - name: Run script to generate image
         run: node generate-image.js
 
+      # === NOV KORAK: Cache Busting ===
+      # Ta korak posodobi verzijo slike v HTML datoteki.
+      - name: Update image version in HTML
+        run: |
+          TIMESTAMP=$(date +%s)
+          sed -i "s|share-image.png?v=[0-9]*|share-image.png?v=${TIMESTAMP}|g" index.html
+          echo "HTML meta tags updated with version ${TIMESTAMP}"
+
+      # Ta korak zdaj shrani spremembe v obeh datotekah
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'ci: Avtomatsko posodobljena slika za deljenje'
-          file_pattern: 'share-image.png'
+          commit_message: 'ci: Avtomatsko posodobljena slika in HTML za deljenje'
+          file_pattern: 'share-image.png index.html'
