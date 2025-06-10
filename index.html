@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slovenske vlade: časovnica (1990-danes)</title>
     
+    <!-- === POSODOBLJENE META OZNAKE ZA NOVO VELIKOST SLIKE === -->
     <meta property="og:title" content="Časovnica slovenskih vlad (1990-danes)">
     <meta property="og:description" content="Kdo je bil dlje na oblasti v Sloveniji? Interaktivna časovnica levih in desnih vlad.">
     <meta property="og:url" content="https://vladers.iffy.top/">
@@ -12,8 +13,8 @@
     <meta property="og:image" content="https://vladers.iffy.top/share-image.png">
     <meta property="og:image:secure_url" content="https://vladers.iffy.top/share-image.png">
     <meta property="og:image:type" content="image/png">
-    <meta property="og:image:width" content="1080">
-    <meta property="og:image:height" content="1080">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="628">
     
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Časovnica slovenskih vlad (1990-danes)">
@@ -80,9 +81,9 @@
         #shareable-image-template {
             position: absolute;
             left: -9999px; /* Keep it off-screen */
-            width: 1080px;
-            height: 1080px;
-            padding: 60px;
+            width: 1200px;
+            height: 628px;
+            padding: 40px;
         }
     </style>
 </head>
@@ -140,10 +141,10 @@
         </footer>
     </div>
     
-    <div id="shareable-image-template" class="bg-gray-800 text-white flex flex-col">
+    <div id="shareable-image-template" class="bg-gray-800 text-white flex flex-col justify-between">
         <div id="share-header" class="flex-shrink-0"></div>
         <div id="share-summary" class="flex-grow"></div>
-        <div id="share-footer" class="w-full flex-shrink-0"></div>
+        <div id="share-footer" class="w-full flex-shrink-0 self-end"></div>
     </div>
 
 
@@ -249,41 +250,42 @@
             }
 
             function populateShareTemplate() {
-                // Final refined layout for the shareable image
-                document.getElementById('share-header').innerHTML = `<div class="text-center pt-8"><h1 class="text-6xl font-bold">Časovnica slovenskih vlad</h1><p class="text-4xl text-gray-300 mt-2">1990 - ${today.getFullYear()}</p></div>`;
+                document.getElementById('share-header').innerHTML = `<div class="text-center pt-2"><h1 class="text-5xl font-bold">Časovnica slovenskih vlad</h1><p class="text-3xl text-gray-300 mt-1">1990 - ${today.getFullYear()}</p></div>`;
                 
                 document.getElementById('share-summary').innerHTML = `
-                    <div class="flex justify-around items-center w-full h-full p-8">
-                        <div class="w-2/5 h-full flex flex-col justify-start items-center text-center bg-gray-900 rounded-2xl pt-6 relative overflow-hidden">
+                    <div class="flex justify-center items-center w-full h-full gap-x-8 px-8">
+                        <!-- Leva Vlada Block -->
+                        <div class="w-1/2 h-4/5 flex flex-col justify-start items-center text-center bg-gray-900 rounded-2xl p-4 relative overflow-hidden">
                             <div class="absolute bottom-0 left-0 w-full bg-red-600 bg-opacity-30" style="height: ${percentLeft}%;"></div>
                             <div class="relative z-10 flex flex-col items-center h-full">
-                                <h2 class="text-4xl font-bold flex items-center mb-6">
-                                    <span class="w-6 h-6 rounded-md bg-red-600 mr-3"></span>
+                                <h2 class="text-3xl font-bold flex items-center mb-4">
+                                    <span class="w-5 h-5 rounded-md bg-red-600 mr-3"></span>
                                     Leva vlada
                                 </h2>
                                 <div class="flex flex-col justify-center flex-grow">
-                                    <p class="text-8xl font-black text-white leading-none">${percentLeft}%</p>
-                                    <p class="text-4xl font-semibold text-gray-300 mt-4">${yearsLeft} let</p>
+                                    <p class="text-7xl font-black text-white leading-none">${percentLeft}%</p>
+                                    <p class="text-3xl font-semibold text-gray-300 mt-3">${yearsLeft} let</p>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="w-2/5 h-full flex flex-col justify-start items-center text-center bg-gray-900 rounded-2xl pt-6 relative overflow-hidden">
+                        <!-- Desna Vlada Block -->
+                        <div class="w-1/2 h-4/5 flex flex-col justify-start items-center text-center bg-gray-900 rounded-2xl p-4 relative overflow-hidden">
                             <div class="absolute bottom-0 left-0 w-full bg-blue-600 bg-opacity-30" style="height: ${percentRight}%;"></div>
                              <div class="relative z-10 flex flex-col items-center h-full">
-                                <h2 class="text-4xl font-bold flex items-center mb-6">
-                                    <span class="w-6 h-6 rounded-md bg-blue-600 mr-3"></span>
+                                <h2 class="text-3xl font-bold flex items-center mb-4">
+                                    <span class="w-5 h-5 rounded-md bg-blue-600 mr-3"></span>
                                     Desna vlada
                                 </h2>
                                 <div class="flex flex-col justify-center flex-grow">
-                                    <p class="text-8xl font-black text-white leading-none">${percentRight}%</p>
-                                    <p class="text-4xl font-semibold text-gray-300 mt-4">${yearsRight} let</p>
+                                    <p class="text-7xl font-black text-white leading-none">${percentRight}%</p>
+                                    <p class="text-3xl font-semibold text-gray-300 mt-3">${yearsRight} let</p>
                                 </div>
                             </div>
                         </div>
                     </div>`;
 
-                document.getElementById('share-footer').innerHTML = `<p class="text-right text-2xl font-semibold text-gray-400 pr-4 pb-4">Vir: ${livePageUrl.replace(/^https?:\/\//, '')}</p>`;
+                document.getElementById('share-footer').innerHTML = `<p class="text-right text-xl font-semibold text-gray-400 pr-2">Vir: ${livePageUrl.replace(/^https?:\/\//, '')}</p>`;
             }
 
 
@@ -315,7 +317,7 @@
                     button.disabled = true;
 
                     html2canvas(element, { 
-                        scale: 1, 
+                        scale: 2, // povečana resolucija za boljšo kvaliteto 
                         logging: false, 
                         useCORS: true,
                         backgroundColor: '#1f2937' // Match bg-gray-800

@@ -15,7 +15,6 @@ const path = require('path');
     const element = await page.$('#shareable-image-template');
     
     if (element) {
-        // === KLJUČNA SPREMEMBA ===
         // Spremeni pozicijo elementa, da ga je mogoče pravilno posneti
         await page.evaluate(el => {
             el.style.position = 'absolute';
@@ -23,8 +22,9 @@ const path = require('path');
             el.style.top = '0px';
         }, element);
 
-        // Nastavi viewport na velikost elementa
-        await page.setViewport({ width: 1080, height: 1080 });
+        // === KLJUČNA SPREMEMBA ===
+        // Nastavi viewport na pravilno velikost slike (1200x628)
+        await page.setViewport({ width: 1200, height: 628 });
 
         // Naredi posnetek zaslona in ga shrani
         await element.screenshot({ path: 'share-image.png' });

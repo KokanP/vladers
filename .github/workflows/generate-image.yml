@@ -2,17 +2,13 @@
 name: Generate Daily Share Image
 
 on:
-  # Akcija se samodejno zažene vsak dan ob 3:00 UTC (4:00 po našem času)
   schedule:
     - cron: '0 3 * * *'
-  # Omogoča tudi ročni zagon preko "Actions" zavihka na GitHubu
   workflow_dispatch:
 
 jobs:
   build-and-commit:
     runs-on: ubuntu-latest
-    
-    # Omogoči akciji, da zapiše spremembe nazaj v repozitorij.
     permissions:
       contents: write
 
@@ -25,8 +21,6 @@ jobs:
         with:
           node-version: '18'
       
-      # === POPRAVLJEN KORAK ===
-      # Namesti posodobljene sistemske odvisnosti, ki jih potrebuje Puppeteer
       - name: Install Puppeteer dependencies
         run: sudo apt-get update && sudo apt-get install -yq libatk1.0-0 libatk-bridge2.0-0 libgdk-pixbuf-2.0-0 libgtk-3-0 libgbm1 libnss3 libxss1 libasound2t64
 
