@@ -1,22 +1,16 @@
-# .github/workflows/generate-image.yml
 name: Generate Daily Share Image
 
 on:
-  # Akcija se samodejno zažene vsak dan ob 3:00 UTC (4:00 po našem času)
   schedule:
     - cron: '0 3 * * *'
-  # Omogoča tudi ročni zagon preko "Actions" zavihka na GitHubu
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build-and-commit:
     runs-on: ubuntu-latest
-    
-    # === DODAN BLOK ZA DOVOLJENJA ===
-    # Ta del omogoči akciji, da zapiše spremembe nazaj v repozitorij.
-    permissions:
-      contents: write
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
